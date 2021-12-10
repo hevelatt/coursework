@@ -1,0 +1,9 @@
+Meikäläinen Matti;Pihkakuja 5;00010;HELSINKI
+Virtanen Kalle;Taviskuja 5;00010;HELSINKI
+Tietäväinen Teijo;Seminaarinkatu 15;40014;JYVÄSKYLÄN YLIOPISTO
+Virtanen B;Kaakkoislinja 3 B 30;96000;ROVANIEMI
+Lappalainen Äijä;Korvenkuja 5;99998;NUORGAM
+Pukki Joulu;Korvatunturi 1;99999;KORVATUNTURI
+Käkelä Kia
+Tietäväinen Tuija
+Toljanteri Tonttu

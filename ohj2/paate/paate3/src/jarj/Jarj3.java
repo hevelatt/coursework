@@ -1,0 +1,51 @@
+package jarj;
+import java.util.Scanner; // tarvitaan tietojen syöttöön
+/**
+ * Ohjelma järjestää kaksi merkkijonoa aakkosjärjestykseen
+ * @author vesal
+ * @version 21.1.2018
+ */
+public class Jarj3 {
+
+    private static final Scanner inputScanner = new Scanner(System.in);
+
+    /**
+     * Kysyy käyttäjältä merkkijonon annetulla tulosteella.
+     * @param prompt lause, joka käyttäjä näkee ennen tietojen syöttöä
+     * @return käyttäjän syöttämä merkkijono ilman rivinvaihtoa
+     */
+    public static String kysy(String prompt) {
+        System.out.print(prompt);
+        return inputScanner.nextLine();
+    }
+
+    /**
+     * Pääohjelma
+     *
+     * @param args Komentorivillä annetut parametetrit
+     */
+    public static void main(String[] args) {
+        String s1, s2, s3, t;
+
+        System.out.println("Ohjelma kysyy kahta merkkijonoa ja laittaa niiden järjestyksen oikeaksi jos se on väärä.");
+        
+        s1 = kysy("Anna 1. merkkijono >");
+        s2 = kysy("Anna 2. merkkijono >");
+        s3 = kysy("Anna 3. merkkijono >");
+
+        if ( s2.compareTo(s3) > 0 ) { // Vaihdetaan merkkijonot tarvittaessa
+            t = s2; s2 = s3; s3 = t;
+        }
+        
+        if ( s1.compareTo(s2) > 0 ) { // Vaihdetaan merkkijonot tarvittaessa
+            t = s1; s1 = s2; s2 = t;
+        }
+
+        if ( s2.compareTo(s3) > 0 ) { // Vaihdetaan merkkijonot tarvittaessa
+            t = s2; s2 = s3; s3 = t;
+        }
+        
+        System.out.println("Jonot " + s1 + ", " + s2 + ", " + s3 + ".");
+    }
+
+}

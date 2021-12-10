@@ -1,0 +1,83 @@
+#include <iostream>
+using std::cout;
+using std::cin;
+using std::endl;
+
+/**
+ * @brief Tulostaa lyhyet ohjeet ohjelman käyttöä varten
+ */
+void ohjeet(void)
+{
+	cout << "Ohjelma laskee huoneen pinta-alan ja tilavuuden annettujen tietojen perusteella." << endl;
+}
+
+/**
+ * @brief Kysyy käyttäjältä alueen leveyden, pituuden ja korkeuden
+ * @param rLeveys Kysyttävän leveyden osoitin
+ * @param rPituus Kysyttävän pituuden osoitin
+ * @param rKorkeus Kysyttävän korkeuden osoitin
+ */
+void kysy_mitat(double &rLeveys, double &rPituus, double &rKorkeus)
+{
+	double leveys, pituus, korkeus;
+	cout << "Anna huoneen leveys, pituus ja korkeus metreina>";
+	cin >> rLeveys >> rPituus >> rKorkeus;
+	cout << endl;
+}
+
+/**
+ * @brief Laskee pinta-alan annetuilla leveyden ja pituuden arvoilla
+ * @param leveys Alueen leveys
+ * @param pituus Alueen pituus
+ * @return Alueen pinta-ala
+ * @code
+ * <pre name="test">
+ *   laske_ala(2.1, 1.2) ~~~ 2.52;
+ *   laske_ala(0, 4.1) ~~~ 0;
+ *   laske_ala(-1,3) ~~~ -3;
+ * </pre>
+ * @endcode
+ */
+double laske_ala(double leveys, double pituus)
+{
+	return leveys*pituus;
+}
+
+/**
+ * @brief Laskee tilavuuden annetuilla pinta-alan ja korkeuden arvoilla
+ * @param leveys Alueen pinta-ala
+ * @param pituus Alueen korkeus
+ * @return Alueen tilavuus
+ * @code
+ * <pre name="test">
+ *   laske_ala(2.1, 1.2) ~~~ 2.52;
+ *   laske_ala(0, 4.1) ~~~ 0;
+ *   laske_ala(-1,3) ~~~ -3;
+ * </pre>
+ * @endcode
+ */
+double laske_tilavuus(double ala, double korkeus)
+{
+	return ala*korkeus;
+}
+
+/**
+ * @brief Tulostaa annetut mitat
+ * @param ala Tulostettava pinta-ala
+ * @param tilavuus Tulostettava tialvuus
+ */
+void tulosta_mitat(double ala, double tilavuus)
+{
+	cout << "Huoneen pinta-ala on " << ala << " ja tilavuus on " << tilavuus << endl;
+}
+
+int main(void)
+{
+	double leveys, pituus, korkeus, ala, tilavuus;
+	ohjeet();
+	kysy_mitat(leveys, pituus, korkeus);
+	ala = laske_ala(leveys, pituus);
+	tilavuus = laske_tilavuus(ala, korkeus);
+	tulosta_mitat(ala, tilavuus);
+	return 0;
+}

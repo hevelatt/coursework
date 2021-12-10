@@ -1,0 +1,11 @@
+https://functional-programming.it.jyu.fi/dc/tasks/type_polytypes1/page
+stack --resolver=lts-16.12 new tyypit2 https://tim.jyu.fi/files/251520/nocolor-tiea341.hsfiles
+:set -XTypeApplications
+Do Type of max min
+Learn how the Haskell type system works
+Do Type of unwords . map reverse . words
+Learn how the Haskell type system works
+Do Type of longest word
+Learn how the Haskell type system works
+Do The tricky map map
+Learn how the Haskell type system works 2/4

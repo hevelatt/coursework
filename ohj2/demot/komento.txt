@@ -1,0 +1,30 @@
+[YLEISTÄ]
+Yleistä
+=======
+Tällä ohjelmalla tulkitaan komentoja. Tunnettuja komentoja ovat:
+
+	ynnää {luvut}
+	isoksi jono
+	palindromiko jono
+
+Komennot voi lyhentää alkupäästä
+
+Esimerkiksi:
+	
+	Anna komento>Ynnää 3 4 5[RET]
+	Tulos on 12.
+	Anna komento>Isoksi kana[RET]
+	kana isona on KANA
+	Anna komento>palindromiko saippuakivikauppias[RET]
+	Sana "saippuakivikauppias" on palindromi!
+
+Ks. myös ynnää, isoksi, palindromiko (voi lyhentää esim. palin*)
+[YNNÄÄ]
+Ynnää:		Laskee yhteen annetut luvut. Desimaaliluvut on sallittu. 
+------		Luvut erotetaan toisistaan välilyönnillä.
+[ISOKSI]
+Isoksi:		Palauttaa annetun merkkijonon muutettuna isoiksi kirjaimiksi.
+------		Myös lauseet on sallittu.
+[PALINDROMIKO]
+Palindromiko:	Kertoo onko annettu merkkijono palindromi.
+------		Myös lauseet on sallittu.
