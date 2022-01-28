@@ -17,3 +17,5 @@ Käymäni ohjelmointikurssit:
 - [Olio-ohjelmointi](https://github.com/hevelatt/coursework/tree/main/olio-ohjelmointi-2021-syksy), Gradia Jyväskylä 2021
 
 - [Graafiset käyttöliittymät](https://github.com/hevelatt/coursework/tree/main/graafiset-kayttoliittymat-2021), Gradia Jyväskylä 2021
+
+- [Rajapinnat ja palvelut](https://github.com/hevelatt/coursework/tree/main/rajapinnat-ja-palvelut-2022), Gradia Jyväskylä 2022

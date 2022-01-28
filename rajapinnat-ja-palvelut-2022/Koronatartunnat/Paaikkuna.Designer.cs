@@ -228,7 +228,7 @@ namespace Koronatartunnat
             this.Controls.Add(this.menuStripPaavalikko);
             this.MainMenuStrip = this.menuStripPaavalikko;
             this.Name = "Paaikkuna";
-            this.Text = "Form1";
+            this.Text = "Koronatartunnat";
             this.menuStripPaavalikko.ResumeLayout(false);
             this.menuStripPaavalikko.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
