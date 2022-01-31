@@ -115,7 +115,6 @@ namespace Koronatartunnat
         {
             // Tarkasteltava päivä määräytyy päivävalinnan mukaan.
             string tartuntapaiva = dateTimePickerTartuntapaiva.Value.ToString("yyyy-MM-dd");
-
             // Nollataan osoitteen loppuosa.
             tartunnatRajoiteLoppu = "";
             foreach (string sid in paivat.Keys)
@@ -175,7 +174,14 @@ namespace Koronatartunnat
 
         private void AlustaTartuntaluku()
         {
-            tartuntojenLkm = int.Parse(tartuntatapaukset[comboBoxAlue.SelectedIndex.ToString()]);
+            if (tartuntatapaukset == null)
+            {
+                NaytaVirhe("Virheellinen päivämäärä: ei tietoja", true);
+            }
+            else
+            {
+                tartuntojenLkm = int.Parse(tartuntatapaukset[comboBoxAlue.SelectedIndex.ToString()]);
+            }
             labelTartunnat.Text = "";
             labelVastaus.Text = "";
         }
