@@ -39,6 +39,15 @@ namespace Koronatartunnat
             if (paivat == null) AlustaPaivat();
             if (string.IsNullOrEmpty(jsonTartunnat)) PaivitaTartuntatapaustiedot();
             if (comboBoxAlue.Items.Count == 0) AlustaAluevalikko();
+
+            if (tartuntatapaukset == null)
+            {
+                NaytaVirhe("Virheellinen päivämäärä: ei tietoja", true);
+            }
+            else
+            {
+                tartuntojenLkm = int.Parse(tartuntatapaukset[comboBoxAlue.SelectedIndex.ToString()]);
+            }
         }
 
         private void päivämäärävalintaToolStripMenuItem_Click(object sender, EventArgs e)
@@ -115,6 +124,7 @@ namespace Koronatartunnat
         {
             // Tarkasteltava päivä määräytyy päivävalinnan mukaan.
             string tartuntapaiva = dateTimePickerTartuntapaiva.Value.ToString("yyyy-MM-dd");
+
             // Nollataan osoitteen loppuosa.
             tartunnatRajoiteLoppu = "";
             foreach (string sid in paivat.Keys)
@@ -140,6 +150,7 @@ namespace Koronatartunnat
             }
             catch (JsonException)
             {
+                tartuntatapaukset = null;
                 NaytaVirhe("Virheellinen päivämäärä: ei tietoja", true);
             }
         }
