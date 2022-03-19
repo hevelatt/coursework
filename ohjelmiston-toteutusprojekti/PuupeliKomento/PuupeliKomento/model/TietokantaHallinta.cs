@@ -11,10 +11,35 @@ namespace Puupeli.model
             this.yhteysmerkkijono = yhteysmerkkijono;
         }
 
-        internal Pelaaja LuoPelaaja(string nimi)
+        internal bool TallennaPelaaja(Pelaaja pelaaja)
         {
-            return KaytaYhteytta<Pelaaja>(HaeTaiTallennaPelaaja, nimi);
+            return KaytaYhteytta(SuoritaKysely,
+                "INSERT INTO Pelaaja (PelaajaNimi, AlueX, AlueY, Polttopuita) VALUES " +
+                $"('{pelaaja.Nimi}', {pelaaja.AlueX}, {pelaaja.AlueY}, {pelaaja.Polttopuita})"
+                ) > 0;
         }
+        internal bool PaivitaPelaaja(Pelaaja pelaaja)
+        {
+            return KaytaYhteytta(SuoritaKysely,
+                $"UPDATE Pelaaja SET AlueX = {pelaaja.AlueX}, AlueY = {pelaaja.AlueY}, " +
+                $"Polttopuita = {pelaaja.Polttopuita} WHERE PelaajaNimi = '{pelaaja.Nimi}'"
+                ) > 0;
+        }
+        internal Pelaaja HaePelaaja(string nimi)
+        {
+            var pelaaja = KaytaYhteytta(HaePelaajaKysely, $"Pelaajanimi = '{nimi}'");
+            if (pelaaja == null)
+            {
+                return new Pelaaja(nimi, 0, 0, 0);
+            }
+            return pelaaja;
+        }
+        internal List<Pelaaja> HaePelaajat(string hakuehto = "")
+        {
+            return KaytaYhteytta(HaePelaajatKysely, hakuehto);
+        }
+        // TODO: nullable kyselyparametri
+        // TODO: Hae pelaaja nullable?
 
         /// <summary>
         /// Suorittaa kyselyitä yhteyden avulla käyttäen hyväksi kyselyparametria.
@@ -40,19 +65,19 @@ namespace Puupeli.model
         }
 
         /// <summary>
-        /// Suorittaa sijoituskyselyn.
+        /// Suorittaa kyselyn.
         /// </summary>
-        /// <param name="yhteys">Avattu SQL-yhteys, jolla sijoituskysely tehdään.</param>
-        /// <param name="sijoituskysely">Suoritettava sijoituskysely.</param>
-        /// <returns>Sijoitettujen rivien lukumäärä.</returns>
+        /// <param name="yhteys">Käytettävä yhteys.</param>
+        /// <param name="kysely">Suoritettava kysely.</param>
+        /// <returns>Vaikuttuneiden rivien lukumäärä.</returns>
         /// <exception cref="InvalidOperationException">Jos yhteys on suljettu.</exception>
-        private static int SijoitaTauluun(SqlConnection yhteys, string sijoituskysely)
+        private static int SuoritaKysely(SqlConnection yhteys, string kysely)
         {
             if (yhteys.State == System.Data.ConnectionState.Closed)
             {
                 throw new InvalidOperationException("Yhteys ei voi olla suljettu");
             }
-            var sijoituskomento = new SqlCommand(sijoituskysely, yhteys);
+            var sijoituskomento = new SqlCommand(kysely, yhteys);
             return sijoituskomento.ExecuteNonQuery();
         }
 
@@ -99,7 +124,7 @@ namespace Puupeli.model
         /// <param name="yhteys">Avattu SQL-yhteys, jolla pelaajaa haetaan.</param>
         /// <param name="hakuehto">SQL-muotoinen hakuehto (WHERE jälkeen), jolla pelaajaa haetaan.</param>
         /// <returns>Pelaaja, joka täyttää hakuehdon, null jos hakuehdon täyttävää pelaajaa ei ole.</returns>
-        private static Pelaaja? HaePelaaja(SqlConnection yhteys, string hakuehto)
+        private static Pelaaja? HaePelaajaKysely(SqlConnection yhteys, string hakuehto)
         {
             var lukija = HaeSqlLukija(yhteys, "Pelaaja", hakuehto, true);
             if (lukija.Read())
@@ -109,38 +134,33 @@ namespace Puupeli.model
             return null;
         }
 
-        /// <summary>
-        /// Tallentaa pelaajan tietokantaan.
-        /// </summary>
-        /// <param name="yhteys">Avattu SQL-yhteys, jonka avulla pelaaja tallennetaan.</param>
-        /// <param name="pelaaja"></param>
-        /// <returns>True, jos tallennus onnistui.</returns>
-        private static bool TallennaPelaaja(SqlConnection yhteys, Pelaaja pelaaja)
+        private static List<Pelaaja> HaePelaajatKysely(SqlConnection yhteys, string hakuehto)
         {
-            string sijoituskysely = "INSERT INTO Pelaaja (PelaajaNimi, AlueX, AlueY, Polttopuita) " +
-                $"VALUES ('{pelaaja.Nimi}', {pelaaja.AlueX}, {pelaaja.AlueY}, {pelaaja.Polttopuita})";
-            if (SijoitaTauluun(yhteys, sijoituskysely) > 0)
+            var pelaajat = new List<Pelaaja>();
+            var lukija = HaeSqlLukija(yhteys, "Pelaaja", hakuehto);
+            while (lukija.Read())
             {
-                return true;
+                pelaajat.Add(LuePelaaja(lukija));
             }
-            return false;
+            return pelaajat;
         }
 
-        /// <summary>
-        /// Hakee pelaajan nimen perusteella. Tallentaa uuden pelaajan jos nimeä ei löydy.
-        /// </summary>
-        /// <param name="yhteys">Avattu SQL-yhteys, jota käytetään.</param>
-        /// <param name="nimi">Haettavan pelaajan nimi.</param>
-        /// <returns>Haetun niminen pelaaja.</returns>
-        private static Pelaaja HaeTaiTallennaPelaaja(SqlConnection yhteys, string nimi)
-        {
-            Pelaaja? pelaaja = HaePelaaja(yhteys, $"Pelaajanimi = '{nimi}'");
-            if (pelaaja == null)
-            {
-                pelaaja = new Pelaaja(nimi, 0, 0, 0);
-                TallennaPelaaja(yhteys, pelaaja);
-            }
-            return pelaaja;
-        }
+
+        //    /// <summary>
+        //    /// Hakee pelaajan nimen perusteella. Tallentaa uuden pelaajan jos nimeä ei löydy.
+        //    /// </summary>
+        //    /// <param name="yhteys">Avattu SQL-yhteys, jota käytetään.</param>
+        //    /// <param name="nimi">Haettavan pelaajan nimi.</param>
+        //    /// <returns>Haetun niminen pelaaja.</returns>
+        //    private static Pelaaja HaeTaiTallennaPelaaja(SqlConnection yhteys, string nimi)
+        //    {
+        //        Pelaaja? pelaaja = HaePelaaja(yhteys, $"Pelaajanimi = '{nimi}'");
+        //        if (pelaaja == null)
+        //        {
+        //            pelaaja = new Pelaaja(nimi, 0, 0, 0);
+        //            TallennaPelaaja(yhteys, pelaaja);
+        //        }
+        //        return pelaaja;
+        //    }
+        //}
     }
-}
