@@ -2,9 +2,6 @@
 {
     internal class Metsa : Alue
     {
-        private const int PolttopuitaKorkeintaan = 5;
-        private const int PolttopuitaVahintaan = 2;
-
         internal override string Tyyppi { get; }
         internal int Puita { get; private set; }
 
@@ -14,14 +11,20 @@
             Puita = puita;
         }
 
-        internal int KaadaPuu(Random satunnaisluku)
+        internal event EventHandler? PuuKaatuu;
+        private protected virtual void OnPuuKaatuu(EventArgs e)
+        {
+            PuuKaatuu?.Invoke(this, e);
+        }
+        internal bool KaadaPuu()
         {
             if (Puita == 0)
             {
-                return 0;
+                return false;
             }
             --Puita;
-            return satunnaisluku.Next(PolttopuitaVahintaan, PolttopuitaKorkeintaan + 1);
+            OnPuuKaatuu(EventArgs.Empty);
+            return true;
         }
     }
 }

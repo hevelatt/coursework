@@ -9,21 +9,37 @@ namespace Puupeli.controller
         internal void run()
         {
             var p = new Pelaaja("",0,0,0);
+            p.HankiPolttopuita(KaadaPuuAlueella);
+            Console.WriteLine(p.Polttopuita);
             //p.PuutaKaadettaessa += KaadaPuu;
             //p.PuutaKaadettaessa = KaadaPuu;
             //p.KaadaPuu();
         }
 
-        internal int KaadaPuu(int x, int y)
+        private Metsa? HaeMetsa(int x, int y)
         {
-            Console.WriteLine("abc");
-            return 0;
+            // TODO: Hae äläkä vain luo.
+            return new Metsa(x, y, 20);
         }
 
-        internal void EventHandlerPuuKaatuu(object? sender, EventArgs e)
+        private static readonly Random satunnaisluku = new();
+        private int KaadaPuuAlueella(int x, int y)
         {
-            //var p = (PeliLogiikka)sender;
-            Console.WriteLine("Pelaaja kaataa puun");
+            Metsa? metsa = HaeMetsa(x, y);
+            if (metsa == null) return 0;
+            metsa.PuuKaatuu += PuuKaatunut;
+            int polttopuita = 0;
+            if (metsa.KaadaPuu())
+            {
+                polttopuita = satunnaisluku.Next(5);
+            }
+            metsa.PuuKaatuu -= PuuKaatunut;
+            return polttopuita;
+        }
+        
+        private void PuuKaatunut(object? sender, EventArgs _)
+        {
+            Console.WriteLine("Rumpsis");
         }
     }
 }
