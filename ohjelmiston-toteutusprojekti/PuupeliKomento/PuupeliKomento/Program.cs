@@ -1,4 +1,5 @@
 ﻿using Puupeli.model;
+using Puupeli.controller;
 
 namespace Puupeli
 {
@@ -14,6 +15,8 @@ namespace Puupeli
                 "TrustServerCertificate=False;" +
                 "ApplicationIntent=ReadWrite;" +
                 "MultiSubnetFailover=False");
+            PeliLogiikka l = new();
+            l.run();
         }
     }
 }

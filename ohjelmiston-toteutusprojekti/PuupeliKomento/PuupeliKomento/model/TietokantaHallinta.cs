@@ -73,6 +73,16 @@ namespace Puupeli.model
 
         #endregion
 
+        #region AlueRajapinta
+
+        // Tallenna
+
+        // Päivitä (puut)
+
+        // Hae (rajat)
+
+        #endregion
+
         #region PelaajaApufunktiot
 
         /// <summary>
