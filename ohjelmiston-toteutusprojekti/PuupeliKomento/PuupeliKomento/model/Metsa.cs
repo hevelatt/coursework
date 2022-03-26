@@ -11,20 +11,19 @@
             Puita = puita;
         }
 
-        internal event EventHandler? PuuKaatuu;
-        private protected virtual void OnPuuKaatuu(EventArgs e)
+        internal event EventHandler? PuuKaatui;
+        private protected virtual void OnPuuKaatui(EventArgs e)
         {
-            PuuKaatuu?.Invoke(this, e);
+            PuuKaatui?.Invoke(this, e);
         }
-        internal bool KaadaPuu()
+        internal void KaadaPuu()
         {
             if (Puita == 0)
             {
-                return false;
+                return;
             }
             --Puita;
-            OnPuuKaatuu(EventArgs.Empty);
-            return true;
+            OnPuuKaatui(EventArgs.Empty);
         }
     }
 }

@@ -39,25 +39,20 @@
             return true;
         }
 
-        //internal event EventHandler? KaadaPuu;
-        //private protected virtual void OnKaadaPuu(EventArgs e) 
-        //{
-        //    KaadaPuu?.Invoke(this, e);
-        //}
 
-        //internal void HeilutaKirvesta()
+        //internal delegate T TeeAlueella<T>(int x, int y);
+        //internal int HankiPolttopuita(TeeAlueella<int> keraaPuita)
         //{
-            // internal void KaadaPuu()
-            // Mistä tietää minkä puun? Mitä tämä edes tarkoittaa? Pelaajaa siis pyydetään kaatamaan puu ilman mitään kontekstia
-            // Mitä jos alueella ei ole puita? Pitääkö pelaajalle kertoa miten puu kaadetaan? Koska ei se osaa...
-            // Ei se voi osata koska sillä ei ole mitään käsitystä... Se voi heiluttaa kirvestä mutta ei pelaaja tunne puun konseptia
-            // se pitäisi siis antaa pelaajalle käsiteltäväksi, mutta silloin pelaaja muuttuu riippuvaiseksi puu-luokasta.
+        //    return Polttopuita += keraaPuita(AlueX, AlueY);
         //}
-
-        internal delegate T TeeAlueella<T>(int x, int y);
-        internal int HankiPolttopuita(TeeAlueella<int> keraaPuita)
+        //internal Action<int, int> TeeAlueella = (x, y) => {};
+        internal void TeeAlueella(Action<int, int> teeAlueella)
         {
-            return Polttopuita += keraaPuita(AlueX, AlueY);
+            teeAlueella(AlueX, AlueY);
+        }
+        internal void LisaaPolttopuita(int polttopuita)
+        {
+            Polttopuita += polttopuita;
         }
     }
 }
