@@ -71,15 +71,36 @@ namespace Puupeli.model
             return KaytaYhteytta(HaePelaajatKysely, "");
         }
 
+        internal List<string> HaePelaajaNimet()
+        {
+            return KaytaYhteytta(HaePelaajaNimetKysely, "");
+        }
+
         #endregion
 
         #region AlueRajapinta
 
-        // Tallenna
+        // Tallenna uusi alue
 
-        // Päivitä (puut)
+        // Päivitä alueen puut jos siis metsä
 
-        // Hae (rajat)
+        // Hae tietty alue (esim x +-10 y +-10)
+        // Lista: koska sitten voi lisätä ja vähentää siitä sitä mukaa kuin on tarvis
+        // Array: koska ladattava alue aina samankokoinen, ei tarvitse tarkastaa koordinaatteja löytääkseen tarvittavan alueen
+        internal void HaeAlueet(Range x, Range y, Alue?[,] alueet)
+        {
+            // x x x x x x x x
+            for (var i = x.Start.Value;  i < x.End.Value; ++i)
+            {
+
+            }
+        }
+
+        // ei nähdä ehtoja.. 
+        internal void TallennaAlueet(Func<int, int, bool> ehdot)
+        {
+            if (ehdot(1, 2)) ;
+        }
 
         #endregion
 
@@ -130,6 +151,17 @@ namespace Puupeli.model
                 pelaajat.Add(LuePelaaja(lukija));
             }
             return pelaajat;
+        }
+
+        private static List<string> HaePelaajaNimetKysely(SqlConnection yhteys, string hakuehto)
+        {
+            var pelaajaNimet = new List<string>();
+            var lukija = HaeSqlLukija(yhteys, "Pelaaja", hakuehto);
+            while (lukija.Read())
+            {
+                pelaajaNimet.Add(lukija.GetString(1));
+            }
+            return pelaajaNimet;
         }
 
         #endregion

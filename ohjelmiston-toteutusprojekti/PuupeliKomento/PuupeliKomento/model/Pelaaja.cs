@@ -39,17 +39,11 @@
             return true;
         }
 
-
-        //internal delegate T TeeAlueella<T>(int x, int y);
-        //internal int HankiPolttopuita(TeeAlueella<int> keraaPuita)
-        //{
-        //    return Polttopuita += keraaPuita(AlueX, AlueY);
-        //}
-        //internal Action<int, int> TeeAlueella = (x, y) => {};
         internal void TeeAlueella(Action<int, int> teeAlueella)
         {
             teeAlueella(AlueX, AlueY);
         }
+
         internal void LisaaPolttopuita(int polttopuita)
         {
             Polttopuita += polttopuita;
