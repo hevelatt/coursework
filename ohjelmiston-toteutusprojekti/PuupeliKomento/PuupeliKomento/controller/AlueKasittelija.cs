@@ -9,7 +9,7 @@ namespace Puupeli.controller
 {
     internal class AlueKasittelija
     {
-        
+
 
         internal AlueKasittelija(int x, int y)
         {
@@ -104,5 +104,88 @@ namespace Puupeli.controller
                 }
             }
         }
-}
+
+        // ================ B ===============
+        private void Siirra()
+        {
+            int a, b, c, d;
+            if (_dy < 0)
+            {
+                a = 0;
+                b = _d + _dy;
+            }
+            else
+            {
+                a = _dy;
+                b = _d;
+            }
+            if (_dx < 0)
+            {
+                c = 0;
+                d = _d + _dx;
+            }
+            else
+            {
+                c = _dx;
+                d = _d;
+            }
+            for (int i = a; i < b; ++i)
+            {
+                for (int j = c; j < d; ++j)
+                {
+                    _a[i - _dy, j - _dx] = _a[i, j];
+                }
+            }
+        }
+
+        // ======================= C ====================
+        private void Lataa()
+        {
+            int a, b;
+            if (_dy < 0)
+            {
+                a = 0;
+                b = -_dy;
+            }
+            else
+            {
+                a = _d - _dy;
+                b = _d;
+            }
+            for (int i = a; i < b; ++i)
+            {
+                for (int j = 0; j < _d; ++j)
+                {
+                    //
+                }
+            }
+
+            int c, d;
+            if (_dx < 0)
+            {
+                // huom. vastakkaiset
+                a = -_dy;
+                b = _d;
+                // huom. sama kuin dy
+                c = 0;
+                d = -_dx;
+            }
+            else
+            {
+                // huom. vastakkaiset
+                a = 0;
+                b = _d - _dy;
+                // huom. sama kuin dy
+                c = _d - _dx;
+                d = _d;
+            }
+            for (int i = a; i < b; ++i)
+            {
+                for (int j = c; j < d; ++j)
+                {
+                    //
+                }
+            }
+        }
+    }
 }
