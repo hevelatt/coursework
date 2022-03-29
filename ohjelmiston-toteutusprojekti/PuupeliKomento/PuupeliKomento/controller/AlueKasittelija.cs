@@ -58,7 +58,7 @@ namespace Puupeli.controller
         // 1. Tallenna A (ja #)
         private void Tallenna()
         {
-            int a, b;
+            int a, b, c, d;
             if (_dy < 0)
             {
                 a = _d + _dy;
@@ -76,23 +76,23 @@ namespace Puupeli.controller
                     //
                 }
             }
-
-            int c, d;
-            if (_dx < 0)
+            if (_dy < 0)
             {
-                // huom. vastakkaiset
                 a = 0;
                 b = _d + _dy;
-                // huom. sama kuin dy
+            }
+            else
+            {
+                a = _dy;
+                b = _d;
+            }
+            if (_dx < 0)
+            {
                 c = _d + _dx;
                 d = _d;
             }
             else
             {
-                // huom. vastakkaiset
-                a = _dy;
-                b = _d;
-                // huom. sama kuin dy
                 c = 0;
                 d = _dx;
             }
@@ -141,7 +141,7 @@ namespace Puupeli.controller
         // ======================= C ====================
         private void Lataa()
         {
-            int a, b;
+            int a, b, c, d;
             if (_dy < 0)
             {
                 a = 0;
@@ -159,23 +159,23 @@ namespace Puupeli.controller
                     //
                 }
             }
-
-            int c, d;
-            if (_dx < 0)
+            if (_dy < 0)
             {
-                // huom. vastakkaiset
                 a = -_dy;
                 b = _d;
-                // huom. sama kuin dy
+            }
+            else
+            {
+                a = 0;
+                b = _d - _dy;
+            }
+            if (_dx < 0)
+            {
                 c = 0;
                 d = -_dx;
             }
             else
             {
-                // huom. vastakkaiset
-                a = 0;
-                b = _d - _dy;
-                // huom. sama kuin dy
                 c = _d - _dx;
                 d = _d;
             }
