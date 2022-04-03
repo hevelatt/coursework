@@ -2,13 +2,11 @@
 {
     internal class Metsa : Alue
     {
-        internal override string Tyyppi { get; }
-        internal int Puita { get; private set; }
+        private int _puita;
 
-        internal Metsa(int sijaintiX, int sijaintiY, int puita) : base(sijaintiX, sijaintiY)
+        internal Metsa(int puita)
         {
-            Tyyppi = "Metsä";
-            Puita = puita;
+            _puita = puita;
         }
 
         internal event EventHandler? PuuKaatui;
@@ -18,11 +16,11 @@
         }
         internal void KaadaPuu()
         {
-            if (Puita == 0)
+            if (_puita == 0)
             {
                 return;
             }
-            --Puita;
+            --_puita;
             OnPuuKaatui(EventArgs.Empty);
         }
     }

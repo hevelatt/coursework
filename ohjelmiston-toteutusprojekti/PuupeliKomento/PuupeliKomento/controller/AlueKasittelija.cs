@@ -7,6 +7,7 @@ using Puupeli.model;
 
 namespace Puupeli.controller
 {
+    // TODO: Tarvitseeko alueiden tietää koordinaattejaan?
     internal class AlueKasittelija
     {
         /// <summary>Ladattujen alueiden säde.</summary>
@@ -45,18 +46,21 @@ namespace Puupeli.controller
             // TODO: Lataa alueet.
         }
 
-        /// <summary>Palauttaa alueen annetuista koordinaateista.</summary>
+        /// <summary>Palauttaa alueen annetuissa koordinaateista.</summary>
         internal Alue HaeAlue(int x, int y)
         {
             int i = _r + y - _oy;
             int j = _r + x - _ox;
+            Alue? alue;
             if (i < 0 || i >= _d || j < 0 || j >= _d)
             {
-                // TODO: Hae tietokannasta, jos ei ole luo uusi ja tallenna.
-                return new Metsa(x, y, 0);
+                alue = HaeTietokannasta(x, y);
             }
-            // TODO: if null niin luo uusi ja tallenna uusi alue tietokantaan.
-            return _a[i, j] ?? new Metsa(x,y,0);
+            else
+            {
+                alue = _a[i, j];
+            }
+            return alue ?? LuoAlue(x, y);
         }
 
         /// <summary>Siirry uudelle alueelle.</summary>
@@ -232,5 +236,15 @@ namespace Puupeli.controller
         private void LataaAlueet(Alue?[,] alueet) { }
         //====================
         internal void Liiku(Suunta suunta, int x, int y) { }
+
+        private Alue LuoAlue(int x, int y)
+        {
+            // TODO: Luo ja tallenna
+            return new Metsa(x, y, 0);
+        }
+        private Alue? HaeTietokannasta(int x, int y)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,15 +1,16 @@
 ﻿namespace Puupeli.model
 {
-    internal abstract class Alue
+    internal class Alue
     {
-        internal int SijaintiX { get; }
-        internal int SijaintiY { get; }
-        internal abstract string Tyyppi { get; }
+        private readonly string? _tyyppi;
 
-        private protected Alue(int sijaintiX, int sijaintiY)
+        internal Alue(string tyyppi)
         {
-            SijaintiX = sijaintiX;
-            SijaintiY = sijaintiY;
+            _tyyppi = tyyppi;
+        }
+
+        private protected Alue()
+        {
         }
     }
 }

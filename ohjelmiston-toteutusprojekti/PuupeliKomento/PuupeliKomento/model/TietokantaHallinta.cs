@@ -35,7 +35,7 @@ namespace Puupeli.model
         {
             return KaytaYhteytta(SuoritaKysely,
                 "INSERT INTO Pelaaja (PelaajaNimi, AlueX, AlueY, Polttopuita) VALUES " +
-                $"('{pelaaja.Nimi}', {pelaaja.AlueX}, {pelaaja.AlueY}, {pelaaja.Polttopuita})"
+                $"('{pelaaja.Nimi}', {pelaaja.X}, {pelaaja.Y}, {pelaaja._polttopuita})"
                 ) > 0;
         }
 
@@ -47,8 +47,8 @@ namespace Puupeli.model
         internal bool PaivitaPelaaja(Pelaaja pelaaja)
         {
             return KaytaYhteytta(SuoritaKysely,
-                $"UPDATE Pelaaja SET AlueX = {pelaaja.AlueX}, AlueY = {pelaaja.AlueY}, " +
-                $"Polttopuita = {pelaaja.Polttopuita} WHERE PelaajaNimi = '{pelaaja.Nimi}'"
+                $"UPDATE Pelaaja SET AlueX = {pelaaja.X}, AlueY = {pelaaja.Y}, " +
+                $"Polttopuita = {pelaaja._polttopuita} WHERE PelaajaNimi = '{pelaaja.Nimi}'"
                 ) > 0;
         }
 
@@ -79,6 +79,24 @@ namespace Puupeli.model
         #endregion
 
         #region AlueRajapinta
+
+        internal Alue? HaeAlue(int x, int y)
+        {
+            // TODO
+            return KaytaYhteytta(HaeAlueKysely, $"SijaintiX = {x} AND SijaintiY = {y}");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
         // Tallenna uusi alue
 
@@ -162,6 +180,29 @@ namespace Puupeli.model
                 pelaajaNimet.Add(lukija.GetString(1));
             }
             return pelaajaNimet;
+        }
+
+        #endregion
+
+        #region AlueApufunktiot
+        //TODO
+        private static Alue LueAlue(SqlDataReader lukija)
+        {
+            // TODO: alueen ei tarvitse tietää koordinaatteja
+            return new Metsa(
+                lukija.GetInt32(1),  // SijaintiX
+                lukija.GetInt32(2),  // SijaintiY
+                lukija.GetInt32(3)); // Puita
+        }
+        //TODO
+        private static Alue? HaeAlueKysely(SqlConnection yhteys, string hakuehto)
+        {
+            var lukija = HaeSqlLukija(yhteys, "Alue", hakuehto, true);
+            if (lukija.Read())
+            {
+                return LueAlue(lukija);
+            }
+            return null;
         }
 
         #endregion

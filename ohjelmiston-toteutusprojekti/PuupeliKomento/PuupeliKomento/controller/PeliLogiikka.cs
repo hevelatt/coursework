@@ -33,7 +33,7 @@ namespace Puupeli.controller
         internal void Liiku(Suunta suunta)
         {
             _pelaaja.Liiku(suunta);
-            _alueKasittelija.Siirry(_pelaaja.AlueX, _pelaaja.AlueY);
+            _alueKasittelija.Siirry(_pelaaja.X, _pelaaja.Y);
         }
 
         internal void KaadaPuu()

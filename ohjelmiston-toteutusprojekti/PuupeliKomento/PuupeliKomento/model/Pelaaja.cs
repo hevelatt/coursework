@@ -5,48 +5,46 @@
     internal class Pelaaja
     {
         internal string Nimi { get; }
-        internal int AlueX { get; private set; }
-        internal int AlueY { get; private set; }
-        internal int Polttopuita { get; private set; }
+        internal int X { get; private set; }
+        internal int Y { get; private set; }
+        private int _polttopuita;
 
-        internal Pelaaja(string nimi, int alueX, int alueY, int polttopuita)
+        internal Pelaaja(string nimi, int x, int y, int polttopuita)
         {
             Nimi = nimi;
-            AlueX = alueX;
-            AlueY = alueY;
-            Polttopuita = polttopuita;
+            X = x;
+            Y = y;
+            _polttopuita = polttopuita;
         }
 
-        internal bool Liiku(Suunta suunta)
+        internal void Liiku(Suunta suunta)
         {
             switch (suunta)
             {
                 case Suunta.Ita:
-                    AlueX += 1;
+                    X += 1;
                     break;
                 case Suunta.Etela:
-                    AlueY += 1;
+                    Y += 1;
                     break;
                 case Suunta.Lansi:
-                    AlueX -= 1;
+                    X -= 1;
                     break;
                 case Suunta.Pohjoinen:
-                    AlueY -= 1;
+                    Y -= 1;
                     break;
-                default:
-                    return false;
             }
-            return true;
         }
 
         internal void TeeAlueella(Action<int, int> teeAlueella)
         {
-            teeAlueella(AlueX, AlueY);
+            teeAlueella(X, Y);
         }
 
         internal void LisaaPolttopuita(int polttopuita)
         {
-            Polttopuita += polttopuita;
+            if (polttopuita <= 0) return;
+            _polttopuita += polttopuita;
         }
     }
 }
