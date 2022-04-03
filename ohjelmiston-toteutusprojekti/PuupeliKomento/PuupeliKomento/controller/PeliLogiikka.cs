@@ -8,6 +8,7 @@ namespace Puupeli.controller
     {
         private static readonly Random s_satunnaisluku = new();
         private readonly TietokantaHallinta _tietokantaHallinta;
+        private readonly AlueKasittelija _alueKasittelija;
         private readonly Pelaaja _pelaaja;
         private Alue?[,] _ladatutAlueet;
 
@@ -29,10 +30,10 @@ namespace Puupeli.controller
         // 2. Siirrä pidettävät alueet uudelle paikalleen
         // 3. Lataa uudet alueet
 
-        private List<Alue> LataaAlueet(Range x, Range y)
+        internal void Liiku(Suunta suunta)
         {
-            _ladatutAlueet.GetLength(1);
-            return null;
+            _pelaaja.Liiku(suunta);
+            _alueKasittelija.Siirry(_pelaaja.AlueX, _pelaaja.AlueY);
         }
 
         internal void KaadaPuu()
@@ -42,7 +43,7 @@ namespace Puupeli.controller
         private Alue? HaeAlue(int x, int y)
         {
             // TODO: Hae äläkä vain luo.
-            return new Metsa(x, y, 20);
+            return _alueKasittelija.HaeAlue(x, y);
         }
         private void KaadaPuuAlueella(int x, int y)
         {

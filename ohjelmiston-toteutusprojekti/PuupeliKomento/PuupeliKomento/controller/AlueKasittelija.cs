@@ -9,183 +9,228 @@ namespace Puupeli.controller
 {
     internal class AlueKasittelija
     {
+        /// <summary>Ladattujen alueiden säde.</summary>
+        private const int _r = 4;
+        /// <summary>Ladattujen alueiden halkaisija.</summary>
+        private const int _d = 2 * _r + 1;
+        /// <summary>Ladatut alueet.</summary>
+        private Alue?[,] _a = new Alue?[_d, _d];
+        /// <summary>Ladattujen alueiden origo x.</summary>
+        private int _ox;
+        /// <summary>Ladattujen alueiden origo y.</summary>
+        private int _oy;
 
+        /// <summary>Tee f määrätyille kaksiulotteisen taulukon alkioille.</summary>
+        /// <param name="f">Alkioille tehtävä toiminta.</param>
+        /// <param name="a">1. ulottuvuuden aloitusindeksi.</param>
+        /// <param name="b">1. ulottovuuden lopetusindeksi.</param>
+        /// <param name="c">2. ulottuvuuden aloitusindeksi.</param>
+        /// <param name="d">2. ulottovuuden lopetusindeksi.</param>
+        private static void TeeAlkioille(Action<int, int> f, int a, int b, int c, int d)
+        {
+            for (int i = a; i < b; ++i)
+            {
+                for (int j = c; j < d; ++j)
+                {
+                    f(i, j);
+                }
+            }  
+        }
 
+        /// <summary>Alusta aluekäsittelijä koordinaateilla.</summary>
         internal AlueKasittelija(int x, int y)
         {
-            _x = x;
-            _y = y;
-            //_ladatutAlueet = new Alue?[9, 9];
+            _ox = x;
+            _oy = y;
+            // TODO: Lataa alueet.
         }
 
-        internal Alue? HaeAlue(int x, int y)
+        /// <summary>Palauttaa alueen annetuista koordinaateista.</summary>
+        internal Alue HaeAlue(int x, int y)
         {
-            // _x, _y = _ladatutAlueet[4,4]
-            _dx = _x - x;
-            _dy = _y - y;
-            return _a[_r + _dy, _r + _dx];
+            int i = _r + y - _oy;
+            int j = _r + x - _ox;
+            if (i < 0 || i >= _d || j < 0 || j >= _d)
+            {
+                // TODO: Hae tietokannasta, jos ei ole luo uusi ja tallenna.
+                return new Metsa(x, y, 0);
+            }
+            // TODO: if null niin luo uusi ja tallenna uusi alue tietokantaan.
+            return _a[i, j] ?? new Metsa(x,y,0);
         }
 
-        private int _x; // Kuvassa X.x
-        private int _y; // Kuvassa X.y
-        private int _dx; // delta X on X.x-#.x (siis muutos)
-        private int _dy; // delta Y
-        private const int _r = 4;
-        private const int _d = 2 * _r + 1;
-        private Alue?[,] _a = new Alue?[_d, _d];
-        //  dX>0, dY<0     dX>0, dY=0       dX>0, dY>0       dX=0, dY>0  dX<0, dY>0     dX<0, dY=0       dX<0, dY<0    dX=0, dY<0
-        // .........................................................................................................................
-        // ....CCCCCCCCC..................................................................................................CCCCCCCCC.
-        // ....CCCCCCCCC.................................................................................CCCCCCCCC........CCCCCCCCC.
-        // ....CCCCCCCCC.................................................................................CCCCCBBBBAAAAA...CCCCCCCCC.
-        // ....CCCCCCCCC.................................................................................CCCCCBBBBAAAAA...CCCCCCCCC.
-        // ....CCCCXCCCC.................................................................................CCCCCBBBBAAAAA...CCCCXCCCC.
-        // .AAABBBBBBCCC...AAAAABBBBCCCCC...AAAAAAAAA........AAAAAAAAA......AAAAAAAAA...CCCCCBBBBAAAAA...CCCCXBBBBAAAAA...BBBBBBBBB.
-        // .AAABBBBBBCCC...AAAAABBBBCCCCC...AAAAAAAAA........AAAAAAAAA......AAAAAAAAA...CCCCCBBBBAAAAA...CCCCCBBBB#AAAA...BBBBBBBBB.
-        // .AAABBBBBBCCC...AAAAABBBBCCCCC...AAAAABBBBCCCCC...AAAAAAAAA......AAAAAAAAA...CCCCCBBBBAAAAA...CCCCCBBBBAAAAA...BBBBBBBBB.
-        // .AAABBBBBBCCC...AAAAABBBBCCCCC...AAAAABBBBCCCCC...AAAAAAAAA......AAAAAAAAA...CCCCCBBBBAAAAA...CCCCCBBBBAAAAA...BBBBBBBBB.
-        // .AAAA#AAAA......AAAA#BBBBXCCCC...AAAA#BBBBCCCCC...AAAA#AAAA......AAAA#AAAA...CCCCXBBBB#AAAA...CCCCCBBBBAAAAA...AAAA#AAAA.
-        // .AAAAAAAAA......AAAAABBBBCCCCC...AAAAABBBBCCCCC...BBBBBBBBB...CCCBBBBBBAAA...CCCCCBBBBAAAAA........AAAAAAAAA...AAAAAAAAA.
-        // .AAAAAAAAA......AAAAABBBBCCCCC...AAAAABBBBXCCCC...BBBBBBBBB...CCCBBBBBBAAA...CCCCCBBBBAAAAA....................AAAAAAAAA.
-        // .AAAAAAAAA......AAAAABBBBCCCCC...AAAAABBBBCCCCC...BBBBBBBBB...CCCBBBBBBAAA...CCCCCBBBBAAAAA....................AAAAAAAAA.
-        // .AAAAAAAAA......AAAAABBBBCCCCC...AAAAABBBBCCCCC...BBBBBBBBB...CCCBBBBBBAAA...CCCCCBBBBAAAAA....................AAAAAAAAA.
-        // ......................................CCCCCCCCC...CCCCXCCCC...CCCCXCCCC..................................................
-        // ......................................CCCCCCCCC...CCCCCCCCC...CCCCCCCCC..................................................
-        // ..................................................CCCCCCCCC...CCCCCCCCC..................................................
-        // ..................................................CCCCCCCCC...CCCCCCCCC..................................................
-        // ..................................................CCCCCCCCC...CCCCCCCCC..................................................
-        // .........................................................................................................................
-        // 1. Tallenna A (ja #)
-        private void Tallenna()
+        /// <summary>Siirry uudelle alueelle.</summary>
+        /// <param name="x">Uuden alueen x-koordinaatti.</param>
+        /// <param name="y">Uuden alueen y-koordinaatti.</param>
+        internal void Siirry(int x, int y)
         {
+            int i = _r + y - _oy;
+            int j = _r + x - _ox;
+            if (i < 0 || i >= _d || j < 0 || j >= _d)
+            {
+                VaihdaAlueet(x, y);
+            }
+        }
+        
+        /// <summary>
+        ///  dX>0, dY<0     dX>0, dY=0       dX>0, dY>0       dX=0, dY>0  dX<0, dY>0     dX<0, dY=0       dX<0, dY<0       dX=0, dY<0
+        /// .........................................................................................................................
+        /// ....CCCCCCCCC..................................................................................................CCCCCCCCC.
+        /// ....CCCCCCCCC.................................................................................CCCCCCCCC........CCCCCCCCC.
+        /// ....CCCCCCCCC.................................................................................CCCCCBBBBAAAAA...CCCCCCCCC.
+        /// ....CCCCCCCCC.................................................................................CCCCCBBBBAAAAA...CCCCCCCCC.
+        /// ....CCCCXCCCC.................................................................................CCCCCBBBBAAAAA...CCCCXCCCC.
+        /// .AAABBBBBBCCC...AAAAABBBBCCCCC...AAAAAAAAA........AAAAAAAAA......AAAAAAAAA...CCCCCBBBBAAAAA...CCCCXBBBBAAAAA...BBBBBBBBB.
+        /// .AAABBBBBBCCC...AAAAABBBBCCCCC...AAAAAAAAA........AAAAAAAAA......AAAAAAAAA...CCCCCBBBBAAAAA...CCCCCBBBB#AAAA...BBBBBBBBB.
+        /// .AAABBBBBBCCC...AAAAABBBBCCCCC...AAAAABBBBCCCCC...AAAAAAAAA......AAAAAAAAA...CCCCCBBBBAAAAA...CCCCCBBBBAAAAA...BBBBBBBBB.
+        /// .AAABBBBBBCCC...AAAAABBBBCCCCC...AAAAABBBBCCCCC...AAAAAAAAA......AAAAAAAAA...CCCCCBBBBAAAAA...CCCCCBBBBAAAAA...BBBBBBBBB.
+        /// .AAAA#AAAA......AAAA#BBBBXCCCC...AAAA#BBBBCCCCC...AAAA#AAAA......AAAA#AAAA...CCCCXBBBB#AAAA...CCCCCBBBBAAAAA...AAAA#AAAA.
+        /// .AAAAAAAAA......AAAAABBBBCCCCC...AAAAABBBBCCCCC...BBBBBBBBB...CCCBBBBBBAAA...CCCCCBBBBAAAAA........AAAAAAAAA...AAAAAAAAA.
+        /// .AAAAAAAAA......AAAAABBBBCCCCC...AAAAABBBBXCCCC...BBBBBBBBB...CCCBBBBBBAAA...CCCCCBBBBAAAAA....................AAAAAAAAA.
+        /// .AAAAAAAAA......AAAAABBBBCCCCC...AAAAABBBBCCCCC...BBBBBBBBB...CCCBBBBBBAAA...CCCCCBBBBAAAAA....................AAAAAAAAA.
+        /// .AAAAAAAAA......AAAAABBBBCCCCC...AAAAABBBBCCCCC...BBBBBBBBB...CCCBBBBBBAAA...CCCCCBBBBAAAAA....................AAAAAAAAA.
+        /// ......................................CCCCCCCCC...CCCCXCCCC...CCCCXCCCC..................................................
+        /// ......................................CCCCCCCCC...CCCCCCCCC...CCCCCCCCC..................................................
+        /// ..................................................CCCCCCCCC...CCCCCCCCC..................................................
+        /// ..................................................CCCCCCCCC...CCCCCCCCC..................................................
+        /// ..................................................CCCCCCCCC...CCCCCCCCC..................................................
+        /// .........................................................................................................................
+        /// </summary>
+        private void VaihdaAlueet(int x, int y)
+        {
+            // Ladattujen alueiden siirtymä.
+            int dx = x - _ox;
+            int dy = x - _oy;
+            // Tallenna alueet A.
+            TallennaAlueet(dx, dy);
+            // Siirrä alueet B.
+            SiirraAlueet(dx, dy);
+            // Lataa alueet C.
+            LataaAlueet(dx, dy);
+            // Uusi origo.
+            _ox = x;
+            _oy = y;
+        }
+
+        private void TallennaAlueet(int dx, int dy)
+        {
+            List<Alue> tallenna = new();
+            void LisaaTallennus(int i, int j)
+            {
+                Alue? alue = _a[i, j];
+                if (alue == null) return;
+                tallenna.Add(alue);
+            }
             int a, b, c, d;
-            if (_dy < 0)
+            if (dy < 0)
             {
-                a = _d + _dy;
+                a = _d + dy;
                 b = _d;
             }
             else
             {
                 a = 0;
-                b = _dy;
+                b = dy;
             }
-            for (int i = a; i < b; ++i)
-            {
-                for (int j = 0; j < _d; ++j)
-                {
-                    //
-                }
-            }
-            if (_dy < 0)
+            TeeAlkioille(LisaaTallennus, a, b, 0, _d);
+            if (dy < 0)
             {
                 a = 0;
-                b = _d + _dy;
+                b = _d + dy;
             }
             else
             {
-                a = _dy;
+                a = dy;
                 b = _d;
             }
-            if (_dx < 0)
+            if (dx < 0)
             {
-                c = _d + _dx;
+                c = _d + dx;
                 d = _d;
             }
             else
             {
                 c = 0;
-                d = _dx;
+                d = dx;
             }
-            for (int i = a; i < b; ++i)
-            {
-                for (int j = c; j < d; ++j)
-                {
-                    //
-                }
-            }
+            TeeAlkioille(LisaaTallennus, a, b, c, d);
+            TallennaAlueet(tallenna);
         }
 
-        // ================ B ===============
-        private void Siirra()
+        private void SiirraAlueet(int dx, int dy)
         {
             int a, b, c, d;
-            if (_dy < 0)
+            if (dy < 0)
             {
                 a = 0;
-                b = _d + _dy;
+                b = _d + dy;
             }
             else
             {
-                a = _dy;
+                a = dy;
                 b = _d;
             }
-            if (_dx < 0)
+            if (dx < 0)
             {
                 c = 0;
-                d = _d + _dx;
+                d = _d + dx;
             }
             else
             {
-                c = _dx;
+                c = dx;
                 d = _d;
             }
-            for (int i = a; i < b; ++i)
-            {
-                for (int j = c; j < d; ++j)
-                {
-                    _a[i - _dy, j - _dx] = _a[i, j];
-                }
-            }
+            TeeAlkioille((i, j) => _a[i - dy, j - dx] = _a[i, j], a, b, c, d);
         }
 
-        // ======================= C ====================
-        private void Lataa()
+        private void LataaAlueet(int dx, int dy)
         {
+            void LisaaLataus(int i, int j)
+            {
+                int x = _ox - _r + i;
+                int y = _oy - _r + j;
+                // _a[i, j] = 
+                // TODO
+            }
             int a, b, c, d;
-            if (_dy < 0)
+            if (dy < 0)
             {
                 a = 0;
-                b = -_dy;
+                b = -dy;
             }
             else
             {
-                a = _d - _dy;
+                a = _d - dy;
                 b = _d;
             }
-            for (int i = a; i < b; ++i)
+            TeeAlkioille(LisaaLataus, a, b, 0, _d);
+            if (dy < 0)
             {
-                for (int j = 0; j < _d; ++j)
-                {
-                    //
-                }
-            }
-            if (_dy < 0)
-            {
-                a = -_dy;
+                a = -dy;
                 b = _d;
             }
             else
             {
                 a = 0;
-                b = _d - _dy;
+                b = _d - dy;
             }
-            if (_dx < 0)
+            if (dx < 0)
             {
                 c = 0;
-                d = -_dx;
+                d = -dx;
             }
             else
             {
-                c = _d - _dx;
+                c = _d - dx;
                 d = _d;
             }
-            for (int i = a; i < b; ++i)
-            {
-                for (int j = c; j < d; ++j)
-                {
-                    //
-                }
-            }
+            TeeAlkioille(LisaaLataus, a, b, c, d);
         }
+
+        
+        private void TallennaAlueet(List<Alue> alueet) { }
+        private void LataaAlueet(Alue?[,] alueet) { }
+        //====================
+        internal void Liiku(Suunta suunta, int x, int y) { }
     }
 }
